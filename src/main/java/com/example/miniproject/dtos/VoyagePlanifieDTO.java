@@ -1,8 +1,13 @@
 package com.example.miniproject.dtos;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Date;
 
+@Getter
+@Setter
 public class VoyagePlanifieDTO {
 
     private Long id;

@@ -14,6 +14,4 @@ public class VehiculeDTO {
     private String typePermisRequis;
     private List<String> equipementsSpeciaux;
 
-    // Getters and setters
-
 }

@@ -1,11 +1,11 @@
 package com.example.miniproject.services;
 
 import com.example.miniproject.dtos.VoyagePlanifieDTO;
+import com.example.miniproject.entities.VoyagePlanifie;
 import com.example.miniproject.repositories.VoyagePlanifieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 public class VoyagePlanifieService {
@@ -13,25 +13,18 @@ public class VoyagePlanifieService {
     @Autowired
     private VoyagePlanifieRepository voyagePlanifieRepository;
 
-    public List<VoyagePlanifieDTO> getAllVoyagesPlanifies() {
-        // Implement logic to fetch and map all voyages planifies from the database
-    }
+    public void createVoyagePlanifie(VoyagePlanifieDTO requestDTO) {
+        VoyagePlanifie voyagePlanifie = new VoyagePlanifie();
+        voyagePlanifie.setDateDepart(requestDTO.getDateDepart());
+        voyagePlanifie.setHeureDepart(String.valueOf(requestDTO.getHeureDepart()));
+        voyagePlanifie.setDateArriveePrevue(requestDTO.getDateArriveePrevue());
+        voyagePlanifie.setHeureArriveePrevue(String.valueOf(requestDTO.getHeureArriveePrevue()));
+        voyagePlanifie.setDepart(requestDTO.getDepart());
+        voyagePlanifie.setDestination(requestDTO.getDestination());
+        voyagePlanifie.setTypeVehicule(requestDTO.getTypeVehicule());
+        voyagePlanifie.setNombrePassagers(requestDTO.getNombrePassagers());
+        voyagePlanifie.setAutresDetails(requestDTO.getAutresDetails());
 
-    public VoyagePlanifieDTO getVoyagePlanifieById(Long id) {
-        // Implement logic to fetch and map a voyage planifie by ID from the database
+        voyagePlanifieRepository.save(voyagePlanifie);
     }
-
-    public VoyagePlanifieDTO createVoyagePlanifie(VoyagePlanifieDTO voyagePlanifieDTO) {
-        // Implement logic to create a new voyage planifie using data from voyagePlanifieDTO
-    }
-
-    public VoyagePlanifieDTO updateVoyagePlanifie(Long id, VoyagePlanifieDTO voyagePlanifieDTO) {
-        // Implement logic to update an existing voyage planifie by ID with data from voyagePlanifieDTO
-    }
-
-    public void deleteVoyagePlanifie(Long id) {
-        // Implement logic to delete a voyage planifie by ID from the database
-    }
-
-    // Implement other methods as needed
 }
