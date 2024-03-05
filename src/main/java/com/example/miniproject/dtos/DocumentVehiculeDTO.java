@@ -1,10 +1,12 @@
 package com.example.miniproject.dtos;
 
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
 
 @Setter
+@Getter
 public class DocumentVehiculeDTO {
 
     private Long id;
