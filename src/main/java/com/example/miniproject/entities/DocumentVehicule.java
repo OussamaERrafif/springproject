@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "documents_vehicules")
+@Table
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,10 +20,10 @@ public class DocumentVehicule {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "vehicule_id")
+    @JoinColumn
     private VehiculeFlotte vehicule;
 
-    @Column(name = "date_validite")
+    @Column
     private LocalDate dateValidite;
 
 

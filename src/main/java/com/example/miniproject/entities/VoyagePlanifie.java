@@ -20,11 +20,9 @@ public class VoyagePlanifie {
     private Long idVoyagePlanifie;
 
     @ManyToOne
-    @JoinColumn(name = "vehicule_id")
     private VehiculeFlotte vehicule;
 
     @ManyToOne
-    @JoinColumn(name = "ID")
     private Conducteur Conducteur;
 
     private Date dateDepart;

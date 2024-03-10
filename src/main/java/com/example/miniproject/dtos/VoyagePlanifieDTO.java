@@ -21,6 +21,4 @@ public class VoyagePlanifieDTO {
     private int nombrePassagers;
     private String autresDetails;
 
-    // Getters and setters
-
 }

@@ -19,6 +19,4 @@ public class BonConsommationDTO {
     private double coutCarburant;
     private String lieuRavitaillement;
 
-    // Getters and setters
-
 }
