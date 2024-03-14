@@ -16,7 +16,7 @@ import java.util.Date;
 public class VoyagePlanifie {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idVoyagePlanifie;
 
     @ManyToOne
@@ -26,7 +26,7 @@ public class VoyagePlanifie {
     private Conducteur Conducteur;
 
     private Date dateDepart;
-    private String heureDepart;
+    private Date heureDepart;
     private Date dateArriveePrevue;
     private String heureArriveePrevue;
     private String depart;

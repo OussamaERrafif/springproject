@@ -20,7 +20,7 @@ public class Conducteur {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idconducteur;
 
-    @OneToMany(mappedBy = "conducteur", cascade = CascadeType.ALL)
+    @OneToMany
     private List<VoyagePlanifie> VoyagePlanifie;
 
     private String prenom;

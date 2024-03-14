@@ -17,7 +17,7 @@ import java.util.List;
 public class VehiculeFlotte {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idVehiculeFlotte;
 
     @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)

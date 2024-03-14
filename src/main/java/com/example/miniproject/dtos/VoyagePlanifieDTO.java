@@ -13,7 +13,7 @@ public class VoyagePlanifieDTO {
     private Date dateDepart;
     private Date heureDepart;
     private Date dateArriveePrevue;
-    private Date heureArriveePrevue;
+    private String heureArriveePrevue;
     private String depart;
     private String destination;
     private String typeVehicule;

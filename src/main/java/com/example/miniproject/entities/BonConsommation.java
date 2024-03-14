@@ -16,15 +16,15 @@ import java.util.Date;
 public class BonConsommation {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idBonConsommation;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn
     private VehiculeFlotte vehicule;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn
     private Conducteur conducteur;
 
 
