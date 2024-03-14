@@ -24,7 +24,8 @@ public class VehiculeFlotte {
     private List<DocumentVehicule> documents;
 
     private String identifiantUnique;
-    private String marqueModele;
+    private String marque;
+    private String modele;
     private String typeVehicule;
     private double kilometrage;
     private boolean disponibilite;
