@@ -33,7 +33,7 @@ public class VehiculeMapper {
         entity.setDisponibilite(dto.isDisponibilite());
         entity.setTypePermisRequis(dto.getTypePermisRequis());
         if (dto.getEquipementsSpeciaux() != null && !dto.getEquipementsSpeciaux().isEmpty()) {
-            entity.setEquipementsSpeciaux(dto.getEquipementsSpeciaux().stream().collect(Collectors.joining(",")));
+            entity.setEquipementsSpeciaux(String.join(",", dto.getEquipementsSpeciaux()));
         }
         return entity;
     }
