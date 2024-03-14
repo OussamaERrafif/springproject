@@ -10,7 +10,6 @@ import java.util.Date;
 @Setter
 public class VoyagePlanifieDTO {
 
-    private Long id;
     private Date dateDepart;
     private Date heureDepart;
     private Date dateArriveePrevue;

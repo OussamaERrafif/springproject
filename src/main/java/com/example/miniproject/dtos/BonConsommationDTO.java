@@ -9,7 +9,6 @@ import java.util.Date;
 @Getter
 public class BonConsommationDTO {
 
-    private Long id;
     private String nomVehicule;
     private String nomConducteur;
     private Date dateVoyage;

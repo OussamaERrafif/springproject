@@ -9,7 +9,6 @@ import lombok.*;
 @Setter
 public class ConducteurDTO {
 
-    private Long idconducteur;
     private String nom;
     private String prenom;
     private String matriculeEmploye;

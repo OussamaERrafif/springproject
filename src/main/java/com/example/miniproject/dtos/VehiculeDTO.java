@@ -9,7 +9,6 @@ import java.util.List;
 @Setter
 public class VehiculeDTO {
 
-    private Long id;
     private String identifiantUnique;
     private String marque;
     private String modele;
