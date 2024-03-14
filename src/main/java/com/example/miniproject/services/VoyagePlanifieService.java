@@ -10,6 +10,9 @@ import com.example.miniproject.repositories.VoyagePlanifieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class VoyagePlanifieService {
 
@@ -32,5 +35,16 @@ public class VoyagePlanifieService {
 
         voyagePlanifieRepository.save(voyage);
     }
+
+
+
+    public List<VoyagePlanifie> getAllVoyages() {
+        return voyagePlanifieRepository.findAll();
+    }
+
+    public Optional<VoyagePlanifie> getVoyageById(long id){
+            return voyagePlanifieRepository.findById(id);
+    }
+
 
 }
