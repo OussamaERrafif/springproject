@@ -1,5 +1,6 @@
 package com.example.miniproject.services;
 
+import com.example.miniproject.dtos.VoyagePlanifieDTO;
 import com.example.miniproject.entities.Conducteur;
 import com.example.miniproject.entities.VehiculeFlotte;
 import com.example.miniproject.entities.VoyagePlanifie;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class affecterlevoiyage {
+public class VoyagePlanifieService {
 
     @Autowired
     private ConducteurRepository conducteurRepository;
@@ -31,4 +32,5 @@ public class affecterlevoiyage {
 
         voyagePlanifieRepository.save(voyage);
     }
+
 }
