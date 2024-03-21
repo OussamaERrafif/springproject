@@ -36,15 +36,23 @@ public class VoyagePlanifieService {
         voyagePlanifieRepository.save(voyage);
     }
 
-
-
     public List<VoyagePlanifie> getAllVoyages() {
         return voyagePlanifieRepository.findAll();
     }
 
-    public Optional<VoyagePlanifie> getVoyageById(long id){
-            return voyagePlanifieRepository.findById(id);
+    public Optional<VoyagePlanifie> getVoyageById(long id) {
+        return voyagePlanifieRepository.findById(id);
     }
 
+    public void addVoyage(VoyagePlanifieDTO voyagePlanifieDTO, Long idConducteur, Long idVehiculeFlotte) {
+        VoyagePlanifie voyage = new VoyagePlanifie();
+        voyage.setDepart(voyagePlanifieDTO.getDepart());
+        voyage.setDestination(voyagePlanifieDTO.getDestination());
+        voyage.setDateDepart(voyagePlanifieDTO.getDateDepart());
+        voyage.setDateArriveePrevue(voyagePlanifieDTO.getDateArriveePrevue());
+        voyage.setConducteur(conducteurRepository.findById(idConducteur).orElseThrow());
+        voyage.setVehicule(vehiculeFlotteRepository.findById(idVehiculeFlotte).orElseThrow());
+        voyagePlanifieRepository.save(voyage);
+    }
 
 }

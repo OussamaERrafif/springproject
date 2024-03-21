@@ -9,10 +9,12 @@ import lombok.*;
 @Setter
 public class ConducteurDTO {
 
-    private String nom;
     private String prenom;
+    private String nom;
     private String matriculeEmploye;
     private Date dateNaissance;
-    private String cin;
+    private String numeroCIN;
     private String numeroPermis;
+    private Date dateDelivrancePermis;
+    private String typePermis;
 }

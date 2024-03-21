@@ -11,7 +11,7 @@ public class ConducteurMapper {
         dto.setPrenom(conducteur.getPrenom());
         dto.setMatriculeEmploye(conducteur.getMatriculeEmploye());
         dto.setDateNaissance(conducteur.getDateNaissance());
-        dto.setCin(conducteur.getNumeroCIN());
+        dto.setNumeroCIN(conducteur.getNumeroCIN());
         dto.setNumeroPermis(conducteur.getNumeroPermis());
         return dto;
     }
@@ -23,7 +23,7 @@ public class ConducteurMapper {
         entity.setPrenom(dto.getPrenom());
         entity.setMatriculeEmploye(dto.getMatriculeEmploye());
         entity.setDateNaissance(dto.getDateNaissance());
-        entity.setNumeroCIN(dto.getCin());
+        entity.setNumeroCIN(dto.getNumeroCIN());
         entity.setNumeroPermis(dto.getNumeroPermis());
         return entity;
     }
