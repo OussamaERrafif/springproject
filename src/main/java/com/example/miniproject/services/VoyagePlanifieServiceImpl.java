@@ -2,7 +2,7 @@ package com.example.miniproject.services;
 
 import com.example.miniproject.entities.VoyagePlanifie;
 import com.example.miniproject.repositories.ConducteurRepository;
-import com.example.miniproject.repositories.VehiculeRepository;
+import com.example.miniproject.repositories.VehiculeFlotteRepository;
 import com.example.miniproject.repositories.VoyagePlanifieRepository;
 import com.example.miniproject.services.interfaces.VoyagePlanifieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class VoyagePlanifieServiceimpl implements VoyagePlanifieService {
+public class VoyagePlanifieServiceImpl implements VoyagePlanifieService {
 
     @Autowired
     private ConducteurRepository conducteurRepository;
 
     @Autowired
-    private VehiculeRepository vehiculeFlotteRepository;
+    private VehiculeFlotteRepository vehiculeFlotteRepository;
 
     @Autowired
     private VoyagePlanifieRepository voyagePlanifieRepository;
