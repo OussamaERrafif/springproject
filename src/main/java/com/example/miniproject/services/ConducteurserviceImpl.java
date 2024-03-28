@@ -5,10 +5,10 @@ import com.example.miniproject.entities.Conducteur;
 import com.example.miniproject.entities.VoyagePlanifie;
 import com.example.miniproject.repositories.ConducteurRepository;
 import com.example.miniproject.repositories.VoyagePlanifieRepository;
+import com.example.miniproject.services.interfaces.Conducteurservice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,9 +59,12 @@ public class ConducteurserviceImpl implements Conducteurservice {
         return conducteurRepository.findAll();
     }
 
-    public void affecterConducteur(long idConducteur, Long idVoyagePlanifie, Long idVehiculeFlotte) {
+    public List<VoyagePlanifie> getVoyagesConducteurs(Long idConducteur) {
+
         Conducteur conducteur = conducteurRepository.findById(idConducteur).orElseThrow();
-        VoyagePlanifie voyagePlanifie = voyagePlanifieRepository.findById(idVoyagePlanifie).orElseThrow();
-        conducteur.setVoyagePlanifie((List<VoyagePlanifie>) voyagePlanifie);
+
+        return voyagePlanifieRepository.findVoyagesByConducteurId(idConducteur);
+
     }
+
 }

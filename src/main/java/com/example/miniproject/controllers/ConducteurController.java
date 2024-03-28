@@ -2,7 +2,8 @@ package com.example.miniproject.controllers;
 
 import com.example.miniproject.dtos.ConducteurDTO;
 import com.example.miniproject.entities.Conducteur;
-import com.example.miniproject.services.Conducteurservice;
+import com.example.miniproject.services.interfaces.AffectationService;
+import com.example.miniproject.services.interfaces.Conducteurservice;
 import com.example.miniproject.services.VoyagePlanifieService;
 
 import java.util.List;
@@ -29,6 +30,10 @@ public class ConducteurController {
 
     @Autowired
     Conducteurservice conducteurservice;
+
+
+    @Autowired
+    AffectationService affectationService;
 
     @GetMapping(produces = "application/json")
     public List<Conducteur> getAllConducteurs() {
@@ -66,7 +71,7 @@ public class ConducteurController {
     public ResponseEntity<String> affecterConducteur(@PathVariable Long idVoyagePlanifie,
             @PathVariable Long idConducteur,
             @PathVariable Long idVehiculeFlotte) {
-        conducteurservice.affecterConducteur(idConducteur, idVoyagePlanifie, idVehiculeFlotte);
+        affectationService.affecterConducteur(idConducteur, idVoyagePlanifie, idVehiculeFlotte);
         return ResponseEntity.status(HttpStatus.OK).body("Conducteur affected successfully!");
 
     }

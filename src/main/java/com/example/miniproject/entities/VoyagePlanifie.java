@@ -26,7 +26,7 @@ public class VoyagePlanifie {
     private Conducteur Conducteur;
 
     private Date dateDepart;
-    private Date heureDepart;
+    private String heureDepart;
     private Date dateArriveePrevue;
     private String heureArriveePrevue;
     private String depart;

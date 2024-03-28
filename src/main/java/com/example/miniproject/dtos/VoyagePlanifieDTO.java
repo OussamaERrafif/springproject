@@ -1,6 +1,5 @@
 package com.example.miniproject.dtos;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +10,7 @@ import java.util.Date;
 public class VoyagePlanifieDTO {
 
     private Date dateDepart;
-    private Date heureDepart;
+    private String heureDepart;
     private Date dateArriveePrevue;
     private String heureArriveePrevue;
     private String depart;

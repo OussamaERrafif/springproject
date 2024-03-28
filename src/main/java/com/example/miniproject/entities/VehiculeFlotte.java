@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -31,6 +30,5 @@ public class VehiculeFlotte {
     private boolean disponibilite;
     private String typePermisRequis;
     private String equipementsSpeciaux;
-
 
 }
