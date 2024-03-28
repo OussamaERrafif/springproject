@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VoyagePlanifieRepository extends JpaRepository<VoyagePlanifie, Long> {
 
-    @Query("SELECT v FROM VoyagePlanifie v WHERE v.conducteur.id = :conducteurId")
+    @Query("SELECT v FROM VoyagePlanifie v WHERE v.Conducteur.idconducteur = :conducteurId")
     List<VoyagePlanifie> findVoyagesByConducteurId(@Param("conducteurId") Long conducteurId);
 }

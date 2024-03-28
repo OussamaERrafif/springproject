@@ -25,15 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/conducteurs")
 public class ConducteurController {
 
-    @Autowired
-    VoyagePlanifieService voyagePlanifieService;
+
 
     @Autowired
     Conducteurservice conducteurservice;
 
 
     @Autowired
-    AffectationService affectationService;
+      AffectationService affectationService;
 
     @GetMapping(produces = "application/json")
     public List<Conducteur> getAllConducteurs() {
