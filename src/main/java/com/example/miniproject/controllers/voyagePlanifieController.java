@@ -2,7 +2,7 @@
 package com.example.miniproject.controllers;
 
 import com.example.miniproject.entities.VoyagePlanifie;
-import com.example.miniproject.services.VoyagePlanifieServiceIMP;
+import com.example.miniproject.services.VoyagePlanifieServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.Optional;
 public class voyagePlanifieController {
 
     @Autowired
-    private VoyagePlanifieServiceIMP voyagePlanifieService;
+    private VoyagePlanifieServiceImpl voyagePlanifieService;
 
     @GetMapping(path="/{id}", produces = "application/json")
     public Optional<VoyagePlanifie> getVoyageById(@PathVariable Long id) {
