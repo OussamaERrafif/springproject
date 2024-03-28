@@ -19,13 +19,12 @@ public class voyagePlanifieController {
     @Autowired
     private VoyagePlanifieService voyagePlanifieService;
 
-    @GetMapping(path="/{id}", produces = "application/json")
-
+    @GetMapping(produces = "application/json")
     public Optional<VoyagePlanifie> getVoyageById(@PathVariable Long id) {
         return voyagePlanifieService.getVoyageById(id);
     }
-    @GetMapping(produces = "application/json")
 
+    @GetMapping(path="/{id}", produces = "application/json")
     public List<VoyagePlanifie> getAllVoyages() {
         return voyagePlanifieService.getAllVoyages();
     }

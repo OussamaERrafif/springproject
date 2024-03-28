@@ -1,58 +1,22 @@
 package com.example.miniproject.services;
-
-import com.example.miniproject.dtos.VoyagePlanifieDTO;
 import com.example.miniproject.entities.Conducteur;
 import com.example.miniproject.entities.VehiculeFlotte;
 import com.example.miniproject.entities.VoyagePlanifie;
-import com.example.miniproject.repositories.ConducteurRepository;
-import com.example.miniproject.repositories.VehiculeRepository;
-import com.example.miniproject.repositories.VoyagePlanifieRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class VoyagePlanifieService {
+public interface VoyagePlanifieService {
 
-    @Autowired
-    private ConducteurRepository conducteurRepository;
+    public VoyagePlanifie add(VoyagePlanifie VoyagePlanifie);
 
-    @Autowired
-    private VehiculeRepository vehiculeFlotteRepository;
+    public void deleteById(long id);
 
-    @Autowired
-    private VoyagePlanifieRepository voyagePlanifieRepository;
+    public Optional<VoyagePlanifie> getbyid(long id);
 
-    public void affecter(Long idVoyagePlanifie, Long idConducteur, Long idVehiculeFlotte) {
-        VoyagePlanifie voyage = voyagePlanifieRepository.findById(idVoyagePlanifie).orElseThrow();
-        Conducteur conducteur = conducteurRepository.findById(idConducteur).orElseThrow();
-        VehiculeFlotte vehicule = vehiculeFlotteRepository.findById(idVehiculeFlotte).orElseThrow();
+    public VoyagePlanifie getbyDate();
 
-        voyage.setConducteur(conducteur);
-        voyage.setVehicule(vehicule);
+    <list>VoyagePlanifie getbydest(String dest);
 
-        voyagePlanifieRepository.save(voyage);
-    }
-
-    public List<VoyagePlanifie> getAllVoyages() {
-        return voyagePlanifieRepository.findAll();
-    }
-
-    public Optional<VoyagePlanifie> getVoyageById(long id) {
-        return voyagePlanifieRepository.findById(id);
-    }
-
-    public void addVoyage(VoyagePlanifieDTO voyagePlanifieDTO, Long idConducteur, Long idVehiculeFlotte) {
-        VoyagePlanifie voyage = new VoyagePlanifie();
-        voyage.setDepart(voyagePlanifieDTO.getDepart());
-        voyage.setDestination(voyagePlanifieDTO.getDestination());
-        voyage.setDateDepart(voyagePlanifieDTO.getDateDepart());
-        voyage.setDateArriveePrevue(voyagePlanifieDTO.getDateArriveePrevue());
-        voyage.setConducteur(conducteurRepository.findById(idConducteur).orElseThrow());
-        voyage.setVehicule(vehiculeFlotteRepository.findById(idVehiculeFlotte).orElseThrow());
-        voyagePlanifieRepository.save(voyage);
-    }
-
+    List<VoyagePlanifie>  getAllVoyages();
 }
