@@ -12,7 +12,9 @@ import com.example.miniproject.repositories.ConducteurRepository;
 import com.example.miniproject.repositories.VoyagePlanifieRepository;
 import com.example.miniproject.services.interfaces.AffectationService;
 import com.example.miniproject.services.interfaces.Conducteurservice;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AffectationServiceImpl implements AffectationService {
 
     Conducteurservice conducteurservice;

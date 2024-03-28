@@ -32,7 +32,6 @@ public class ConducteurController {
     Conducteurservice conducteurservice;
 
 
-    @Autowired
     AffectationService affectationService;
 
     @GetMapping(produces = "application/json")
