@@ -1,4 +1,4 @@
-package com.example.miniproject.services;
+package com.example.miniproject.services.interfaces;
 import com.example.miniproject.entities.Conducteur;
 import com.example.miniproject.entities.VehiculeFlotte;
 import com.example.miniproject.entities.VoyagePlanifie;
