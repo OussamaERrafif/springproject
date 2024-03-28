@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 public interface VoyagePlanifieRepository extends JpaRepository<VoyagePlanifie, Long> {
     List<VoyagePlanifie> findByDestination(String destination);
+
     @Query("SELECT v FROM VoyagePlanifie v WHERE v.Conducteur.idconducteur = :conducteurId")
     List<VoyagePlanifie> findVoyagesByConducteurId(@Param("conducteurId") Long conducteurId);
 
