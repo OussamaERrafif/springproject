@@ -4,7 +4,7 @@ import com.example.miniproject.dtos.ConducteurDTO;
 import com.example.miniproject.entities.Conducteur;
 import com.example.miniproject.services.interfaces.AffectationService;
 import com.example.miniproject.services.interfaces.Conducteurservice;
-import com.example.miniproject.services.interfaces.VoyagePlanifieService;
+import com.example.miniproject.services.VoyagePlanifieService;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,14 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/conducteurs")
 public class ConducteurController {
 
-    @Autowired
-    VoyagePlanifieService voyagePlanifieService;
+
 
     @Autowired
     Conducteurservice conducteurservice;
 
 
-    AffectationService affectationService;
+    @Autowired
+      AffectationService affectationService;
 
     @GetMapping(produces = "application/json")
     public List<Conducteur> getAllConducteurs() {

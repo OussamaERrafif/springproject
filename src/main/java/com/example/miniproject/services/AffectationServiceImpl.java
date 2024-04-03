@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AffectationServiceImpl implements AffectationService {
 
+    @Autowired
     Conducteurservice conducteurservice;
 
     @Autowired
@@ -39,7 +40,7 @@ public class AffectationServiceImpl implements AffectationService {
     }
 
     public List<Conducteur> getConducteursDisponibles(String heureDepart, Date dateDepart, Date dateArriveePrevue,
-            String heureArriveePrevue) {
+            String heureArriveePrevue , String typeVehicule) {
 
         List<Conducteur> allConducteurs = conducteurservice.getAllConducteurs();
         List<Conducteur> conducteursDisponibles = new ArrayList<Conducteur>();
@@ -49,23 +50,29 @@ public class AffectationServiceImpl implements AffectationService {
             List<VoyagePlanifie> voyagesconducteur = conducteurservice
                     .getVoyagesConducteurs(conducteur.getIdconducteur());
 
-            for (VoyagePlanifie voyage : voyagesconducteur) {
+            if (voyagesconducteur.size() == 0 ) {
+                if(conducteur.getTypePermis().equalsIgnoreCase(typeVehicule)) conducteursDisponibles.add(conducteur);
+                continue;
+            } else {
+                for (VoyagePlanifie voyage : voyagesconducteur) {
 
-                boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart())
-                        && dateDepart.before(voyage.getDateArriveePrevue());
-                boolean endsDuringTrip = dateArriveePrevue.after(voyage.getDateDepart())
-                        && dateArriveePrevue.before(voyage.getDateArriveePrevue());
-                boolean spansTrip = dateDepart.before(voyage.getDateDepart())
-                        && dateArriveePrevue.after(voyage.getDateArriveePrevue());
+                    boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart())
+                            && dateDepart.before(voyage.getDateArriveePrevue());
+                    boolean endsDuringTrip = dateArriveePrevue.after(voyage.getDateDepart())
+                            && dateArriveePrevue.before(voyage.getDateArriveePrevue());
+                    boolean spansTrip = dateDepart.before(voyage.getDateDepart())
+                            && dateArriveePrevue.after(voyage.getDateArriveePrevue());
+                    boolean typepermismismtch =conducteur.getTypePermis().equalsIgnoreCase(voyage.getTypeVehicule());
 
-                if (startsDuringTrip || endsDuringTrip || spansTrip
-                        || conducteur.getTypePermis() != voyage.getTypeVehicule()) {
-                    continue;
+                    if (startsDuringTrip || endsDuringTrip || spansTrip
+                            || typepermismismtch) {
+                        continue;
 
-                } else {
-                    conducteursDisponibles.add(conducteur);
+                    } else {
+                        conducteursDisponibles.add(conducteur);
+                    }
+
                 }
-
             }
 
         }
