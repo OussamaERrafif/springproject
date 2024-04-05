@@ -11,7 +11,8 @@ import java.util.List;
 
 @Repository
 public interface VehiculeFlotteRepository extends JpaRepository<VehiculeFlotte, Long> {
-    @Query("SELECT v.vehicule FROM VoyagePlanifie v WHERE v.dateDepart = :startDate AND v.dateArriveePrevue = :endDate")
-    List<VehiculeFlotte> findVehiculesByDepartAndEndDate(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    //@Query("SELECT v.vehicule FROM VoyagePlanifie v WHERE v.dateDepart = :startDate AND v.dateArriveePrevue = :endDate")
+    //List<VehiculeFlotte> findVehiculesByDepartAndEndDate(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 }

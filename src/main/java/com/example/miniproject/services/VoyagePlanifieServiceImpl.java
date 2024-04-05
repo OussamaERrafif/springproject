@@ -57,4 +57,8 @@ public class VoyagePlanifieServiceImpl implements VoyagePlanifieService {
         return voyagePlanifieRepository.findAll();
     }
 
+    @Override
+    public List<VoyagePlanifie> getVoyagesVehicule(Long vehiculeId) {
+        return voyagePlanifieRepository.findByVehiculeId(vehiculeId);
+    }
 }

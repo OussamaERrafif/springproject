@@ -19,4 +19,5 @@ public interface VoyagePlanifieService {
     <list>VoyagePlanifie getbydest(String dest);
 
     List<VoyagePlanifie>  getAllVoyages();
+    List<VoyagePlanifie> getVoyagesVehicule(Long vehiculeId);
 }

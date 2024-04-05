@@ -3,8 +3,9 @@ package com.example.miniproject.controllers;
 import java.util.Date;
 import java.util.List;
 
+import com.example.miniproject.entities.VehiculeFlotte;
 import com.example.miniproject.entities.VoyagePlanifie;
-import com.example.miniproject.services.VoyagePlanifieService;
+import com.example.miniproject.services.VoyagePlanifieServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class AffectationController {
     AffectationService affectationService;
 
     @Autowired
-    VoyagePlanifieService voyagePlanifieService;
+    VoyagePlanifieServiceImpl voyagePlanifieService;
 
     @PutMapping(path = "/affecterConducteur/{idConducteur}/{idVoyagePlanifie}/{idVehiculeFlotte}", produces = "application/json")
     public ResponseEntity<String> affecterConducteur(@PathVariable Long idConducteur,
@@ -51,5 +52,21 @@ public class AffectationController {
         return affectationService.getConducteursDisponibles(heureDepart, dateDepart, dateArriveePrevue,
                 heureArriveePrevue, typeVehicule);
     }
+
+    @GetMapping(path = "/VehiculesDisponibles/{voyagePlanifieId}", produces = "application/json")
+    public List<VehiculeFlotte> getVehiculesDisponibles(@PathVariable Long voyagePlanifieId) {
+
+        VoyagePlanifie voyage = voyagePlanifieService.getVoyageById(voyagePlanifieId).orElseThrow();
+
+        String heureDepart = voyage.getHeureDepart();
+        String heureArriveePrevue = voyage.getHeureArriveePrevue();
+        Date dateDepart = voyage.getDateDepart();
+        Date dateArriveePrevue = voyage.getDateArriveePrevue();
+        String typeVehiculeRequis = voyage.getTypeVehicule();
+
+        return affectationService.getVehiculesDisponibles(heureDepart, dateDepart, dateArriveePrevue,
+                heureArriveePrevue, typeVehiculeRequis);
+    }
+
 
 }

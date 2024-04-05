@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.miniproject.entities.VehiculeFlotte;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.miniproject.entities.Conducteur;
@@ -19,6 +20,14 @@ public class AffectationServiceImpl implements AffectationService {
 
     @Autowired
     Conducteurservice conducteurservice;
+
+    @Autowired
+    private VehiculeFlotteServiceImpl vehiculeFlotteService;
+
+    @Autowired
+    private VoyagePlanifieServiceImpl voyagePlanifieService;
+
+
 
     @Autowired
     ConducteurRepository conducteurRepository;
@@ -50,9 +59,8 @@ public class AffectationServiceImpl implements AffectationService {
             List<VoyagePlanifie> voyagesconducteur = conducteurservice
                     .getVoyagesConducteurs(conducteur.getIdconducteur());
 
-            if (voyagesconducteur.size() == 0 ) {
+            if (voyagesconducteur.isEmpty()) {
                 if(conducteur.getTypePermis().equalsIgnoreCase(typeVehicule)) conducteursDisponibles.add(conducteur);
-                continue;
             } else {
                 for (VoyagePlanifie voyage : voyagesconducteur) {
 
@@ -79,6 +87,44 @@ public class AffectationServiceImpl implements AffectationService {
 
         // TODO Auto-generated method stub
         return conducteursDisponibles;
+    }
+
+    public List<VehiculeFlotte> getVehiculesDisponibles(String heureDepart, Date dateDepart, Date dateArriveePrevue,
+                                                        String heureArriveePrevue, String typeVehiculeRequis) {
+
+        List<VehiculeFlotte> allVehicules = vehiculeFlotteService.getAllVehiculesFlotte();
+        List<VehiculeFlotte> vehiculesDisponibles = new ArrayList<>();
+
+        for (VehiculeFlotte vehicule : allVehicules) {
+
+            List<VoyagePlanifie> voyagesVehicule = voyagePlanifieService.getVoyagesVehicule(vehicule.getIdVehiculeFlotte());
+
+            if (voyagesVehicule.isEmpty()) {
+                if (vehicule.getTypePermisRequis().equalsIgnoreCase(typeVehiculeRequis)) {
+                    vehiculesDisponibles.add(vehicule);
+                }
+                continue;
+            } else {
+                for (VoyagePlanifie voyage : voyagesVehicule) {
+
+                    boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart())
+                            && dateDepart.before(voyage.getDateArriveePrevue());
+                    boolean endsDuringTrip = dateArriveePrevue.after(voyage.getDateDepart())
+                            && dateArriveePrevue.before(voyage.getDateArriveePrevue());
+                    boolean spansTrip = dateDepart.before(voyage.getDateDepart())
+                            && dateArriveePrevue.after(voyage.getDateArriveePrevue());
+                    boolean typePermisMatch = vehicule.getTypePermisRequis().equalsIgnoreCase(voyage.getTypeVehicule());
+
+                    if (startsDuringTrip || endsDuringTrip || spansTrip || typePermisMatch) {
+                        continue;
+                    } else {
+                        vehiculesDisponibles.add(vehicule);
+                    }
+                }
+            }
+        }
+
+        return vehiculesDisponibles;
     }
 
 }

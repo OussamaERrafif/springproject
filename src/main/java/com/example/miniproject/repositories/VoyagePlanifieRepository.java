@@ -17,4 +17,9 @@ public interface VoyagePlanifieRepository extends JpaRepository<VoyagePlanifie, 
     @Query("SELECT v FROM VoyagePlanifie v WHERE v.Conducteur.idconducteur = :conducteurId")
     List<VoyagePlanifie> findVoyagesByConducteurId(@Param("conducteurId") Long conducteurId);
 
+    @Query("SELECT v FROM VoyagePlanifie v WHERE v.vehicule.idVehiculeFlotte = :vehiculeId")
+    List<VoyagePlanifie> findByVehiculeId(@Param("vehiculeId") Long vehiculeId);
+
+
+
 }
