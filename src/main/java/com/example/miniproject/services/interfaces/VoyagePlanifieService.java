@@ -1,4 +1,4 @@
-package com.example.miniproject.services;
+package com.example.miniproject.services.interfaces;
 import com.example.miniproject.entities.Conducteur;
 import com.example.miniproject.entities.VehiculeFlotte;
 import com.example.miniproject.entities.VoyagePlanifie;
@@ -19,4 +19,5 @@ public interface VoyagePlanifieService {
     <list>VoyagePlanifie getbydest(String dest);
 
     List<VoyagePlanifie>  getAllVoyages();
+    List<VoyagePlanifie> getVoyagesVehicule(Long vehiculeId);
 }
