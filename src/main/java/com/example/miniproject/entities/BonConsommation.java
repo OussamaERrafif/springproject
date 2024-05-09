@@ -20,12 +20,10 @@ public class BonConsommation {
     private Long idBonConsommation;
 
     @ManyToOne
-    @JoinColumn
     private VehiculeFlotte vehicule;
 
     @ManyToOne
-    @JoinColumn
-    private Conducteur conducteur;
+    private Conducteur Conducteur;
 
 
     private Date dateVoyage;

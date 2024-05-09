@@ -21,5 +21,4 @@ public interface VoyagePlanifieRepository extends JpaRepository<VoyagePlanifie, 
     List<VoyagePlanifie> findByVehiculeId(@Param("vehiculeId") Long vehiculeId);
 
 
-
 }

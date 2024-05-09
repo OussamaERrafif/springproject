@@ -4,13 +4,11 @@ import com.example.miniproject.dtos.VehiculeDTO;
 import com.example.miniproject.entities.VehiculeFlotte;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class VehiculeMapper {
 
     public static VehiculeDTO entityToDto(VehiculeFlotte vehiculeFlotte) {
         VehiculeDTO dto = new VehiculeDTO();
-        dto.setIdentifiantUnique(vehiculeFlotte.getIdentifiantUnique());
         dto.setMarque(vehiculeFlotte.getMarque());
         dto.setModele(vehiculeFlotte.getModele());
         dto.setTypeVehicule(vehiculeFlotte.getTypeVehicule());
@@ -25,7 +23,6 @@ public class VehiculeMapper {
 
     public static VehiculeFlotte dtoToEntity(VehiculeDTO dto) {
         VehiculeFlotte entity = new VehiculeFlotte();
-        entity.setIdentifiantUnique(dto.getIdentifiantUnique());
         entity.setModele(dto.getModele());
         entity.setMarque(dto.getMarque());
         entity.setTypeVehicule(dto.getTypeVehicule());

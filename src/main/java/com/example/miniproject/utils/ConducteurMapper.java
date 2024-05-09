@@ -18,7 +18,6 @@ public class ConducteurMapper {
 
     public static Conducteur dtoToEntity(ConducteurDTO dto) {
         Conducteur entity = new Conducteur();
-        // Assuming setters are available for all fields in the entity class
         entity.setNom(dto.getNom());
         entity.setPrenom(dto.getPrenom());
         entity.setMatriculeEmploye(dto.getMatriculeEmploye());

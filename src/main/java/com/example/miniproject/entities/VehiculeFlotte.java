@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class VehiculeFlotte {
+    
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +22,12 @@ public class VehiculeFlotte {
 
     @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
     private List<DocumentVehicule> documents;
+
+    @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
+    private List<VoyagePlanifie> voyages;
+
+    @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
+    private List<BonConsommation> bonConsommations;
 
     private String identifiantUnique;
     private String marque;
@@ -30,5 +37,9 @@ public class VehiculeFlotte {
     private boolean disponibilite;
     private String typePermisRequis;
     private String equipementsSpeciaux;
+
+    public void addVoyagePlanifie(VoyagePlanifie voyage) {
+        this.voyages.add(voyage);
+    }
 
 }

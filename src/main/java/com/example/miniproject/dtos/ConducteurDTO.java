@@ -1,6 +1,5 @@
 package com.example.miniproject.dtos;
 
-import com.example.miniproject.entities.Conducteur;
 
 import java.util.Date;
 import lombok.*;

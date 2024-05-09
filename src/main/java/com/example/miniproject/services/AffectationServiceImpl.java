@@ -1,18 +1,20 @@
 package com.example.miniproject.services;
 
 import java.util.Date;
-import java.util.ArrayList;
 import java.util.List;
-
-import com.example.miniproject.entities.VehiculeFlotte;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.example.miniproject.dtos.VoyagePlanifieDTO;
 import com.example.miniproject.entities.Conducteur;
+import com.example.miniproject.entities.VehiculeFlotte;
 import com.example.miniproject.entities.VoyagePlanifie;
 import com.example.miniproject.repositories.ConducteurRepository;
 import com.example.miniproject.repositories.VoyagePlanifieRepository;
 import com.example.miniproject.services.interfaces.AffectationService;
 import com.example.miniproject.services.interfaces.Conducteurservice;
+import com.example.miniproject.services.interfaces.VoyagePlanifieService;
+import com.example.miniproject.utils.VoyagePlanifieMapper;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,12 +24,10 @@ public class AffectationServiceImpl implements AffectationService {
     Conducteurservice conducteurservice;
 
     @Autowired
-    private VehiculeFlotteServiceImpl vehiculeFlotteService;
+    ConducteurserviceImpl conducteurService;
 
     @Autowired
-    private VoyagePlanifieServiceImpl voyagePlanifieService;
-
-
+    VehiculeFlotteServiceImpl vehiculeFlotteService;
 
     @Autowired
     ConducteurRepository conducteurRepository;
@@ -35,96 +35,84 @@ public class AffectationServiceImpl implements AffectationService {
     @Autowired
     VoyagePlanifieRepository voyagePlanifieRepository;
 
-    @SuppressWarnings({ "unchecked", "null" })
-    public void affecterConducteur(long idConducteur, Long idVoyagePlanifie, Long idVehiculeFlotte) {
-        Conducteur conducteur = conducteurRepository.findById(idConducteur).orElseThrow();
-        VoyagePlanifie voyagePlanifie = null;
+    
+    //assign a driver to a planned trip
+    @Override
+    public int affecterConducteur(VoyagePlanifie voyage) {
+        String heureDepart = voyage.getHeureDepart();
+        Date dateDepart = voyage.getDateDepart();
+        Date dateArriveePrevue = voyage.getDateArriveePrevue();
+        String typeVehiculeRequis = voyage.getVehicule().getTypeVehicule();
+        String heureArriveePrevue = voyage.getHeureArriveePrevue();
 
-        voyagePlanifie = voyagePlanifieRepository.findById(idVoyagePlanifie).orElseThrow();
-
-        List<VoyagePlanifie> existingVoyages = conducteur.getVoyagePlanifie();
-        existingVoyages.addAll((List<VoyagePlanifie>) voyagePlanifie);
-
-        conducteur.setVoyagePlanifie(existingVoyages);
-    }
-
-    public List<Conducteur> getConducteursDisponibles(String heureDepart, Date dateDepart, Date dateArriveePrevue,
-            String heureArriveePrevue , String typeVehicule) {
-
-        List<Conducteur> allConducteurs = conducteurservice.getAllConducteurs();
-        List<Conducteur> conducteursDisponibles = new ArrayList<Conducteur>();
-
-        for (Conducteur conducteur : allConducteurs) {
-
-            List<VoyagePlanifie> voyagesconducteur = conducteurservice
-                    .getVoyagesConducteurs(conducteur.getIdconducteur());
-
-            if (voyagesconducteur.isEmpty()) {
-                if(conducteur.getTypePermis().equalsIgnoreCase(typeVehicule)) conducteursDisponibles.add(conducteur);
-            } else {
-                for (VoyagePlanifie voyage : voyagesconducteur) {
-
-                    boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart())
-                            && dateDepart.before(voyage.getDateArriveePrevue());
-                    boolean endsDuringTrip = dateArriveePrevue.after(voyage.getDateDepart())
-                            && dateArriveePrevue.before(voyage.getDateArriveePrevue());
-                    boolean spansTrip = dateDepart.before(voyage.getDateDepart())
-                            && dateArriveePrevue.after(voyage.getDateArriveePrevue());
-                    boolean typepermismismtch =conducteur.getTypePermis().equalsIgnoreCase(voyage.getTypeVehicule());
-
-                    if (startsDuringTrip || endsDuringTrip || spansTrip
-                            || typepermismismtch) {
-                        continue;
-
-                    } else {
-                        conducteursDisponibles.add(conducteur);
-                    }
-
-                }
-            }
-
+        List<Conducteur> conducteursDisponibles = conducteurService.getConducteursDisponibles(heureDepart, dateDepart,
+                dateArriveePrevue, heureArriveePrevue, typeVehiculeRequis);
+        if (conducteursDisponibles.size() > 0) {
+            Conducteur conducteur = conducteursDisponibles.get(0);
+            voyage.setConducteur(conducteur);
+            voyagePlanifieRepository.save(voyage);
+            System.out.println("Conducteur affected successfully!");
+            return 1;
         }
+        System.out.println("Failed to affect conducteur.");
+        return 0;
 
-        // TODO Auto-generated method stub
-        return conducteursDisponibles;
     }
 
-    public List<VehiculeFlotte> getVehiculesDisponibles(String heureDepart, Date dateDepart, Date dateArriveePrevue,
-                                                        String heureArriveePrevue, String typeVehiculeRequis) {
-
-        List<VehiculeFlotte> allVehicules = vehiculeFlotteService.getAllVehiculesFlotte();
-        List<VehiculeFlotte> vehiculesDisponibles = new ArrayList<>();
-
-        for (VehiculeFlotte vehicule : allVehicules) {
-
-            List<VoyagePlanifie> voyagesVehicule = voyagePlanifieService.getVoyagesVehicule(vehicule.getIdVehiculeFlotte());
-
-            if (voyagesVehicule.isEmpty()) {
-                if (vehicule.getTypePermisRequis().equalsIgnoreCase(typeVehiculeRequis)) {
-                    vehiculesDisponibles.add(vehicule);
-                }
-                continue;
-            } else {
-                for (VoyagePlanifie voyage : voyagesVehicule) {
-
-                    boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart())
-                            && dateDepart.before(voyage.getDateArriveePrevue());
-                    boolean endsDuringTrip = dateArriveePrevue.after(voyage.getDateDepart())
-                            && dateArriveePrevue.before(voyage.getDateArriveePrevue());
-                    boolean spansTrip = dateDepart.before(voyage.getDateDepart())
-                            && dateArriveePrevue.after(voyage.getDateArriveePrevue());
-                    boolean typePermisMatch = vehicule.getTypePermisRequis().equalsIgnoreCase(voyage.getTypeVehicule());
-
-                    if (startsDuringTrip || endsDuringTrip || spansTrip || typePermisMatch) {
-                        continue;
-                    } else {
-                        vehiculesDisponibles.add(vehicule);
-                    }
-                }
+    @Override
+    public int affecterConducteurEtVehicule(Long idcon ,Long idveh ,VoyagePlanifie voyage) {
+        String heureDepart = voyage.getHeureDepart();
+        Date dateDepart = voyage.getDateDepart();
+        Date dateArriveePrevue = voyage.getDateArriveePrevue();
+        String typeVehiculeRequis = voyage.getTypeVehicule();
+        String heureArriveePrevue = voyage.getHeureArriveePrevue();
+        //get the driver by id
+        Conducteur conducteur = conducteurRepository.findById(idcon).orElse(null);
+        //get the vehicle by id
+        VehiculeFlotte vehicule = vehiculeFlotteService.getVehiculeFlotteById(idveh);
+        List<Conducteur> conducteursDisponibles = conducteurService.getConducteursDisponibles(heureDepart, dateDepart,
+                dateArriveePrevue, heureArriveePrevue, typeVehiculeRequis);
+        List<VehiculeFlotte> vehiculesDisponibles = vehiculeFlotteService.getVehiculesDisponibles(heureDepart, dateDepart,
+                dateArriveePrevue, heureArriveePrevue, typeVehiculeRequis);
+        if (conducteursDisponibles.size() > 0 && vehiculesDisponibles.size() > 0) {
+            if (conducteursDisponibles.contains(conducteur) && vehiculesDisponibles.contains(vehicule)) {
+                voyage.setConducteur(conducteur);
+                voyage.setVehicule(vehicule);
+                voyagePlanifieRepository.save(voyage);
+                System.out.println("Conducteur and vehicule affected successfully!");
+                return 1;
+            }else{
+                System.out.println("Failed to affect conducteur and vehicule.");
+                return 0;
             }
         }
+        return 0;
 
-        return vehiculesDisponibles;
+
     }
+
+    //assign a vehicle to a planned trip
+    @Override
+    public int affecterVehicule(VoyagePlanifie voyage) {
+        String heureDepart = voyage.getHeureDepart();
+        Date dateDepart = voyage.getDateDepart();
+        Date dateArriveePrevue = voyage.getDateArriveePrevue();
+        String typeVehiculeRequis = voyage.getTypeVehicule();
+        String heureArriveePrevue = voyage.getHeureArriveePrevue();
+
+        List<VehiculeFlotte> vehiculesDisponibles = vehiculeFlotteService.getVehiculesDisponibles(heureDepart, dateDepart,
+                dateArriveePrevue, heureArriveePrevue,typeVehiculeRequis );
+        if (vehiculesDisponibles.size() > 0) {
+            VehiculeFlotte vehicule = vehiculesDisponibles.get(0);
+            voyage.setVehicule(vehicule);
+            voyagePlanifieRepository.save(voyage);
+            System.out.println("Vehicule affected successfully!");
+            return 1;
+        }
+        System.out.println("Failed to affect vehicule.");
+        return 0;
+    }
+
+    
 
 }

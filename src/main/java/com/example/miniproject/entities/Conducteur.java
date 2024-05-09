@@ -20,8 +20,10 @@ public class Conducteur {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idconducteur;
 
-    @OneToMany
+    @OneToMany(mappedBy = "Conducteur" , cascade = CascadeType.ALL)
     private List<VoyagePlanifie> VoyagePlanifie;
+    @OneToMany(mappedBy = "Conducteur", cascade = CascadeType.ALL)
+    private List<BonConsommation> bonConsommations;
 
     private String prenom;
     private String nom;
@@ -31,5 +33,9 @@ public class Conducteur {
     private String numeroPermis;
     private Date dateDelivrancePermis;
     private String typePermis;
+
+    public void addVoyagePlanifie(VoyagePlanifie voyage) {
+        this.VoyagePlanifie.add(voyage);
+    }
 
 }
