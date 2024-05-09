@@ -99,6 +99,7 @@ public class ConducteurserviceImpl implements Conducteurservice {
             boolean isAvailable = true;
             List<VoyagePlanifie> voyagesConducteur = voyagePlanifieService
                     .getVoyagesConducteur(conducteur.getIdconducteur());
+            //test
 
             for (VoyagePlanifie voyage : voyagesConducteur) {
                 boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart())
