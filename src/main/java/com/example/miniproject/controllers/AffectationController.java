@@ -1,26 +1,16 @@
 package com.example.miniproject.controllers;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-
-import com.example.miniproject.entities.VehiculeFlotte;
 import com.example.miniproject.entities.VoyagePlanifie;
 import com.example.miniproject.services.VoyagePlanifieServiceImpl;
-import com.example.miniproject.repositories.VoyagePlanifieRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.miniproject.dtos.VoyagePlanifieDTO;
-import com.example.miniproject.entities.Conducteur;
 import com.example.miniproject.services.interfaces.AffectationService;
 
 @RestController
@@ -72,10 +62,10 @@ public class AffectationController {
                 VoyagePlanifie voyage = voyageOptional.get();
                 
                 // Call the service method to affect a vehicule to the voyage
-                Void result = affectationService.affecterVehicule(voyage);
+                int result = affectationService.affecterVehicule(voyage);
                 
                 // Check if the operation was successful
-                if (result != null) {
+                if (result != 0) {
                     return ResponseEntity.status(HttpStatus.OK).body("Vehicule affected successfully!");
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to affect vehicule.");

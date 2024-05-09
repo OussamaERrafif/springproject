@@ -8,7 +8,7 @@ import com.example.miniproject.entities.VoyagePlanifie;
 public interface AffectationService {
 
     public Void affecterConducteur(VoyagePlanifie voyage);
-    public Void affecterVehicule(VoyagePlanifie voyage);
+    public int affecterVehicule(VoyagePlanifie voyage);
     
 
 }

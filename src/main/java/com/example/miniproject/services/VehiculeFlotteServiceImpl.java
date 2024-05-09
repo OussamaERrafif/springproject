@@ -4,7 +4,6 @@ import com.example.miniproject.entities.VehiculeFlotte;
 import com.example.miniproject.entities.VoyagePlanifie;
 import com.example.miniproject.repositories.VehiculeFlotteRepository;
 
-
 import com.example.miniproject.services.interfaces.VehiculeFlotteService;
 import com.example.miniproject.utils.VehiculeMapper;
 
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.miniproject.dtos.VehiculeDTO;
-
 
 import java.util.List;
 import java.util.ArrayList;
@@ -26,11 +24,8 @@ public class VehiculeFlotteServiceImpl implements VehiculeFlotteService {
     @Autowired
     private VehiculeFlotteRepository vehiculeFlotteRepository;
 
-
     @Autowired
     private VoyagePlanifieServiceImpl VoyagePlanifieService;
-
-    
 
     @Override
     public VehiculeFlotte saveVehiculeFlotte(VehiculeDTO vehiculeFlotteDto) {
@@ -46,7 +41,6 @@ public class VehiculeFlotteServiceImpl implements VehiculeFlotteService {
         }
         return vehiculeFlotteRepository.saveAll(vehicules);
     }
-
 
     @Override
     @Transactional(readOnly = true)
@@ -84,8 +78,9 @@ public class VehiculeFlotteServiceImpl implements VehiculeFlotteService {
             vehiculeFlotteRepository.save(existingVehiculeFlotte);
         }
     }
+
     public List<VehiculeFlotte> getVehiculesDisponibles(String heureDepart, Date dateDepart, Date dateArriveePrevue,
-                                                        String heureArriveePrevue, String typeVehiculeRequis) {
+            String heureArriveePrevue, String typeVehiculeRequis) {
 
         List<VehiculeFlotte> allVehicules = vehiculeFlotteRepository.findAll();
         List<VehiculeFlotte> vehiculesDisponibles = new ArrayList<>();
@@ -98,17 +93,25 @@ public class VehiculeFlotteServiceImpl implements VehiculeFlotteService {
                 continue;
             }
 
-            List<VoyagePlanifie> voyagesVehicule = VoyagePlanifieService.getVoyagesVehicule(vehicule.getIdVehiculeFlotte());
+            List<VoyagePlanifie> voyagesVehicule = VoyagePlanifieService
+                    .getVoyagesVehicule(vehicule.getIdVehiculeFlotte());
 
-            for (VoyagePlanifie voyage : voyagesVehicule) {
-                // Check for overlapping voyages
-                boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart()) && dateDepart.before(voyage.getDateArriveePrevue());
-                boolean endsDuringTrip = dateArriveePrevue.after(voyage.getDateDepart()) && dateArriveePrevue.before(voyage.getDateArriveePrevue());
-                boolean spansTrip = dateDepart.before(voyage.getDateDepart()) && dateArriveePrevue.after(voyage.getDateArriveePrevue());
+            if (voyagesVehicule.isEmpty()) {
+                return allVehicules;
+            }else{
+                for (VoyagePlanifie voyage : voyagesVehicule) {
+                    // Check for overlapping voyages
+                    boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart())
+                            && dateDepart.before(voyage.getDateArriveePrevue());
+                    boolean endsDuringTrip = dateArriveePrevue.after(voyage.getDateDepart())
+                            && dateArriveePrevue.before(voyage.getDateArriveePrevue());
+                    boolean spansTrip = dateDepart.before(voyage.getDateDepart())
+                            && dateArriveePrevue.after(voyage.getDateArriveePrevue());
 
-                if (startsDuringTrip || endsDuringTrip || spansTrip) {
-                    isAvailable = false;
-                    break;
+                    if (startsDuringTrip || endsDuringTrip || spansTrip) {
+                        isAvailable = false;
+                        break;
+                    }
                 }
             }
 

@@ -65,33 +65,24 @@ public class AffectationServiceImpl implements AffectationService {
 
     //assign a vehicle to a planned trip
     @Override
-    public Void affecterVehicule(VoyagePlanifie voyage) {
+    public int affecterVehicule(VoyagePlanifie voyage) {
         String heureDepart = voyage.getHeureDepart();
         Date dateDepart = voyage.getDateDepart();
         Date dateArriveePrevue = voyage.getDateArriveePrevue();
-        String typeVehiculeRequis = voyage.getVehicule().getTypeVehicule();
+        String typeVehiculeRequis = voyage.getTypeVehicule();
         String heureArriveePrevue = voyage.getHeureArriveePrevue();
 
         List<VehiculeFlotte> vehiculesDisponibles = vehiculeFlotteService.getVehiculesDisponibles(heureDepart, dateDepart,
-                dateArriveePrevue, typeVehiculeRequis, heureArriveePrevue);
-        for (VehiculeFlotte vehicule : vehiculesDisponibles) {
-            String typeVehicule= "" ;
-            if(voyage.getVehicule().getTypeVehicule() == null) {
-                typeVehicule = "Electric Sedan";
-            }
-            if (vehicule.getTypeVehicule().equalsIgnoreCase(typeVehicule)) {
-                List<VoyagePlanifie> existingVoyages = vehicule.getVoyages();
-                for (VoyagePlanifie existingVoyage : existingVoyages) {
-                    if (existingVoyage.getDateDepart().equals(voyage.getDateDepart())
-                            && existingVoyage.getDateArriveePrevue().equals(voyage.getDateArriveePrevue())) {
-                        return null;
-                    }
-                }
-                vehicule.addVoyagePlanifie(voyage);
-            }
-
+                dateArriveePrevue, heureArriveePrevue,typeVehiculeRequis );
+        if (vehiculesDisponibles.size() > 0) {
+            VehiculeFlotte vehicule = vehiculesDisponibles.get(0);
+            voyage.setVehicule(vehicule);
+            voyagePlanifieRepository.save(voyage);
+            System.out.println("Vehicule affected successfully!");
+            return 1;
         }
-        return null;
+        System.out.println("Failed to affect vehicule.");
+        return 0;
     }
 
     
