@@ -1,5 +1,6 @@
 package com.example.miniproject.controllers;
 
+import com.example.miniproject.dtos.VehiculeDTO;
 import com.example.miniproject.entities.VehiculeFlotte;
 import com.example.miniproject.services.interfaces.VehiculeFlotteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +11,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/vehicules")
+@RequestMapping("/vehicules")
 public class VehiculeFlotteController {
+    
 
     @Autowired
     private VehiculeFlotteService vehiculeFlotteService;
 
     @PostMapping
-    public ResponseEntity<VehiculeFlotte> saveVehiculeFlotte(@RequestBody VehiculeFlotte vehiculeFlotte) {
+    public ResponseEntity<VehiculeFlotte> saveVehiculeFlotte(@RequestBody VehiculeDTO vehiculeFlotte) {
         VehiculeFlotte savedVehiculeFlotte = vehiculeFlotteService.saveVehiculeFlotte(vehiculeFlotte);
         return new ResponseEntity<>(savedVehiculeFlotte, HttpStatus.CREATED);
+    }
+
+    // @PostMapping for more than one VehiculeFlotte
+    @PostMapping("/saveAll")
+    public ResponseEntity<List<VehiculeFlotte>> saveAllVehiculeFlotte(@RequestBody List<VehiculeDTO> vehiculesFlotte) {
+        List<VehiculeFlotte> savedVehiculesFlotte = vehiculeFlotteService.saveAllVehiculeFlotte(vehiculesFlotte);
+        return new ResponseEntity<>(savedVehiculesFlotte, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")

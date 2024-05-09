@@ -1,4 +1,5 @@
 package com.example.miniproject.services.interfaces;
+import com.example.miniproject.dtos.VoyagePlanifieDTO;
 import com.example.miniproject.entities.Conducteur;
 import com.example.miniproject.entities.VehiculeFlotte;
 import com.example.miniproject.entities.VoyagePlanifie;
@@ -8,7 +9,7 @@ import java.util.Optional;
 
 public interface VoyagePlanifieService {
 
-    public VoyagePlanifie add(VoyagePlanifie VoyagePlanifie);
+    public VoyagePlanifie add(VoyagePlanifieDTO voyagePlanifiedto);
 
     public void deleteById(long id);
 
