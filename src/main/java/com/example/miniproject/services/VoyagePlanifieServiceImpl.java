@@ -20,12 +20,6 @@ import java.util.Optional;
 public class VoyagePlanifieServiceImpl implements VoyagePlanifieService {
 
     @Autowired
-    private ConducteurRepository conducteurRepository;
-
-    @Autowired
-    private VehiculeFlotteRepository vehiculeFlotteRepository;
-
-    @Autowired
     private VoyagePlanifieRepository voyagePlanifieRepository;
 
     public Optional<VoyagePlanifie> getVoyageById(long id) {
@@ -35,13 +29,9 @@ public class VoyagePlanifieServiceImpl implements VoyagePlanifieService {
     @Override
     public VoyagePlanifie add(VoyagePlanifieDTO voyagePlanifiedto) {
         VoyagePlanifie voyagePlanifie = VoyagePlanifieMapper.dtoToEntity(voyagePlanifiedto);
-        
 
         return voyagePlanifieRepository.save(voyagePlanifie);
     }
-
-    
-
 
     @Override
     public void deleteById(long id) {
@@ -49,7 +39,9 @@ public class VoyagePlanifieServiceImpl implements VoyagePlanifieService {
     }
 
     @Override
-    public Optional<VoyagePlanifie> getbyid(long id) {return voyagePlanifieRepository.findById(id);}
+    public Optional<VoyagePlanifie> getbyid(long id) {
+        return voyagePlanifieRepository.findById(id);
+    }
 
     @Override
     public VoyagePlanifie getbyDate() {
@@ -57,8 +49,9 @@ public class VoyagePlanifieServiceImpl implements VoyagePlanifieService {
     }
 
     @Override
-    public <list>VoyagePlanifie getbydest(String dest) {return (VoyagePlanifie) voyagePlanifieRepository.findByDestination(dest);}
-
+    public <list> VoyagePlanifie getbydest(String dest) {
+        return (VoyagePlanifie) voyagePlanifieRepository.findByDestination(dest);
+    }
 
     @Override
     public List<VoyagePlanifie> getAllVoyages() {
@@ -68,6 +61,11 @@ public class VoyagePlanifieServiceImpl implements VoyagePlanifieService {
     @Override
     public List<VoyagePlanifie> getVoyagesVehicule(Long vehiculeId) {
         return voyagePlanifieRepository.findByVehiculeId(vehiculeId);
+    }
+
+    @Override
+    public List<VoyagePlanifie> getVoyagesConducteur(Long conducteurId) {
+        return voyagePlanifieRepository.findVoyagesByConducteurId(conducteurId);
     }
 
     public List<VoyagePlanifie> addVoyages(List<VoyagePlanifieDTO> voyagePlanifieList) {

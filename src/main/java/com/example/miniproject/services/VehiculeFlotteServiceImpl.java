@@ -81,45 +81,45 @@ public class VehiculeFlotteServiceImpl implements VehiculeFlotteService {
 
     public List<VehiculeFlotte> getVehiculesDisponibles(String heureDepart, Date dateDepart, Date dateArriveePrevue,
             String heureArriveePrevue, String typeVehiculeRequis) {
-
         List<VehiculeFlotte> allVehicules = vehiculeFlotteRepository.findAll();
         List<VehiculeFlotte> vehiculesDisponibles = new ArrayList<>();
 
+        // First, collect all vehicles that match the required type
         for (VehiculeFlotte vehicule : allVehicules) {
-            boolean isAvailable = true;
-
-            // Check if the vehicle type matches the required type
-            if (!vehicule.getTypePermisRequis().equalsIgnoreCase(typeVehiculeRequis)) {
-                continue;
-            }
-
-            List<VoyagePlanifie> voyagesVehicule = VoyagePlanifieService
-                    .getVoyagesVehicule(vehicule.getIdVehiculeFlotte());
-
-            if (voyagesVehicule.isEmpty()) {
-                return allVehicules;
-            }else{
-                for (VoyagePlanifie voyage : voyagesVehicule) {
-                    // Check for overlapping voyages
-                    boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart())
-                            && dateDepart.before(voyage.getDateArriveePrevue());
-                    boolean endsDuringTrip = dateArriveePrevue.after(voyage.getDateDepart())
-                            && dateArriveePrevue.before(voyage.getDateArriveePrevue());
-                    boolean spansTrip = dateDepart.before(voyage.getDateDepart())
-                            && dateArriveePrevue.after(voyage.getDateArriveePrevue());
-
-                    if (startsDuringTrip || endsDuringTrip || spansTrip) {
-                        isAvailable = false;
-                        break;
-                    }
-                }
-            }
-
-            if (isAvailable) {
+            if (vehicule.getTypeVehicule().equalsIgnoreCase(typeVehiculeRequis)) {
                 vehiculesDisponibles.add(vehicule);
             }
         }
 
-        return vehiculesDisponibles;
+        // Create a new list to store truly available vehicles
+        List<VehiculeFlotte> trulyAvailableVehicles = new ArrayList<>();
+
+        // Then check if the vehicles are available
+        for (VehiculeFlotte vehicule : vehiculesDisponibles) {
+            boolean isAvailable = true;
+            List<VoyagePlanifie> voyagesVehicule = VoyagePlanifieService
+                    .getVoyagesVehicule(vehicule.getIdVehiculeFlotte());
+
+            for (VoyagePlanifie voyage : voyagesVehicule) {
+                boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart())
+                        && dateDepart.before(voyage.getDateArriveePrevue());
+                boolean endsDuringTrip = dateArriveePrevue.after(voyage.getDateDepart())
+                        && dateArriveePrevue.before(voyage.getDateArriveePrevue());
+                boolean spansTrip = dateDepart.before(voyage.getDateDepart())
+                        && dateArriveePrevue.after(voyage.getDateArriveePrevue());
+
+                if (startsDuringTrip || endsDuringTrip || spansTrip) {
+                    isAvailable = false;
+                    break;
+                }
+            }
+
+            if (isAvailable) {
+                trulyAvailableVehicles.add(vehicule);
+            }
+        }
+
+        return trulyAvailableVehicles;
     }
+
 }

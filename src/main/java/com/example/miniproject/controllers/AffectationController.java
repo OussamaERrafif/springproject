@@ -34,10 +34,10 @@ public class AffectationController {
                 VoyagePlanifie voyage = voyageOptional.get();
                 
                 // Call the service method to affect a conducteur to the voyage
-                Void result = affectationService.affecterConducteur(voyage);
+                int result = affectationService.affecterConducteur(voyage);
                 
                 // Check if the operation was successful
-                if (result != null) {
+                if (result != 0) {
                     return ResponseEntity.status(HttpStatus.OK).body("Conducteur affected successfully!");
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to affect conducteur.");
@@ -69,6 +69,34 @@ public class AffectationController {
                     return ResponseEntity.status(HttpStatus.OK).body("Vehicule affected successfully!");
                 } else {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to affect vehicule.");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Voyage not found.");
+            }
+        } catch (Exception e) {
+            // Handle exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+
+    // Affect a conducteur and a vehicule to a voyage
+    @PutMapping(path = "/affecterconveh/{idcon}/{idveh}/{id}", produces = "application/json")
+    public ResponseEntity<String> affecterConducteurEtVehicule(@PathVariable Long idcon, @PathVariable Long idveh, @PathVariable Long id) {
+        try {
+            // Get the voyage by id
+            Optional<VoyagePlanifie> voyageOptional = voyagePlanifieService.getVoyageById(id);
+            
+            if (voyageOptional.isPresent()) {
+                VoyagePlanifie voyage = voyageOptional.get();
+                
+                // Call the service method to affect a conducteur and a vehicule to the voyage
+                int result = affectationService.affecterConducteurEtVehicule(idcon, idveh, voyage);
+                
+                // Check if the operation was successful
+                if (result != 0) {
+                    return ResponseEntity.status(HttpStatus.OK).body("Conducteur and vehicule affected successfully!");
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to affect conducteur and vehicule.");
                 }
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Voyage not found.");

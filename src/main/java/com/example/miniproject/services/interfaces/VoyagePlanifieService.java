@@ -1,4 +1,5 @@
 package com.example.miniproject.services.interfaces;
+
 import com.example.miniproject.dtos.VoyagePlanifieDTO;
 import com.example.miniproject.entities.Conducteur;
 import com.example.miniproject.entities.VehiculeFlotte;
@@ -17,8 +18,11 @@ public interface VoyagePlanifieService {
 
     public VoyagePlanifie getbyDate();
 
-    <list>VoyagePlanifie getbydest(String dest);
+    <list> VoyagePlanifie getbydest(String dest);
 
-    List<VoyagePlanifie>  getAllVoyages();
+    List<VoyagePlanifie> getAllVoyages();
+
     List<VoyagePlanifie> getVoyagesVehicule(Long vehiculeId);
+
+    public List<VoyagePlanifie> getVoyagesConducteur(Long conducteurId);
 }

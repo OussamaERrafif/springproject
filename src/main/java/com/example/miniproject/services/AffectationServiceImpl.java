@@ -38,7 +38,7 @@ public class AffectationServiceImpl implements AffectationService {
     
     //assign a driver to a planned trip
     @Override
-    public Void affecterConducteur(VoyagePlanifie voyage) {
+    public int affecterConducteur(VoyagePlanifie voyage) {
         String heureDepart = voyage.getHeureDepart();
         Date dateDepart = voyage.getDateDepart();
         Date dateArriveePrevue = voyage.getDateArriveePrevue();
@@ -46,21 +46,49 @@ public class AffectationServiceImpl implements AffectationService {
         String heureArriveePrevue = voyage.getHeureArriveePrevue();
 
         List<Conducteur> conducteursDisponibles = conducteurService.getConducteursDisponibles(heureDepart, dateDepart,
-                dateArriveePrevue, typeVehiculeRequis, heureArriveePrevue);
-        for (Conducteur conducteur : conducteursDisponibles) {
-            if (conducteur.getTypePermis().equalsIgnoreCase(voyage.getVehicule().getTypePermisRequis())) {
-                List<VoyagePlanifie> existingVoyages = conducteur.getVoyagePlanifie();
-                for (VoyagePlanifie existingVoyage : existingVoyages) {
-                    if (existingVoyage.getDateDepart().equals(voyage.getDateDepart())
-                            && existingVoyage.getDateArriveePrevue().equals(voyage.getDateArriveePrevue())) {
-                        return null;
-                    }
-                }
-                conducteur.addVoyagePlanifie(voyage);
-            }
-
+                dateArriveePrevue, heureArriveePrevue, typeVehiculeRequis);
+        if (conducteursDisponibles.size() > 0) {
+            Conducteur conducteur = conducteursDisponibles.get(0);
+            voyage.setConducteur(conducteur);
+            voyagePlanifieRepository.save(voyage);
+            System.out.println("Conducteur affected successfully!");
+            return 1;
         }
-        return null;
+        System.out.println("Failed to affect conducteur.");
+        return 0;
+
+    }
+
+    @Override
+    public int affecterConducteurEtVehicule(Long idcon ,Long idveh ,VoyagePlanifie voyage) {
+        String heureDepart = voyage.getHeureDepart();
+        Date dateDepart = voyage.getDateDepart();
+        Date dateArriveePrevue = voyage.getDateArriveePrevue();
+        String typeVehiculeRequis = voyage.getTypeVehicule();
+        String heureArriveePrevue = voyage.getHeureArriveePrevue();
+        //get the driver by id
+        Conducteur conducteur = conducteurRepository.findById(idcon).orElse(null);
+        //get the vehicle by id
+        VehiculeFlotte vehicule = vehiculeFlotteService.getVehiculeFlotteById(idveh);
+        List<Conducteur> conducteursDisponibles = conducteurService.getConducteursDisponibles(heureDepart, dateDepart,
+                dateArriveePrevue, heureArriveePrevue, typeVehiculeRequis);
+        List<VehiculeFlotte> vehiculesDisponibles = vehiculeFlotteService.getVehiculesDisponibles(heureDepart, dateDepart,
+                dateArriveePrevue, heureArriveePrevue, typeVehiculeRequis);
+        if (conducteursDisponibles.size() > 0 && vehiculesDisponibles.size() > 0) {
+            if (conducteursDisponibles.contains(conducteur) && vehiculesDisponibles.contains(vehicule)) {
+                voyage.setConducteur(conducteur);
+                voyage.setVehicule(vehicule);
+                voyagePlanifieRepository.save(voyage);
+                System.out.println("Conducteur and vehicule affected successfully!");
+                return 1;
+            }else{
+                System.out.println("Failed to affect conducteur and vehicule.");
+                return 0;
+            }
+        }
+        return 0;
+
+
     }
 
     //assign a vehicle to a planned trip

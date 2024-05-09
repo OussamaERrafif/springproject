@@ -4,6 +4,7 @@ import com.example.miniproject.dtos.ConducteurDTO;
 import com.example.miniproject.entities.Conducteur;
 import com.example.miniproject.entities.VoyagePlanifie;
 import com.example.miniproject.repositories.ConducteurRepository;
+import com.example.miniproject.repositories.VehiculeFlotteRepository;
 import com.example.miniproject.repositories.VoyagePlanifieRepository;
 import com.example.miniproject.services.interfaces.Conducteurservice;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,12 @@ public class ConducteurserviceImpl implements Conducteurservice {
 
     @Autowired
     private VoyagePlanifieRepository VoyagePlanifieRepository;
+
+    @Autowired
+    private VoyagePlanifieServiceImpl voyagePlanifieService;
+
+    @Autowired
+    private VehiculeFlotteRepository vehiculeFlotteRepository;
 
     public Optional<Conducteur> getConducteurById(Long id) {
         return conducteurRepository.findById(id);
@@ -72,27 +79,34 @@ public class ConducteurserviceImpl implements Conducteurservice {
         return VoyagePlanifieRepository.findVoyagesByConducteurId(idConducteur);
 
     }
+
     public List<Conducteur> getConducteursDisponibles(String heureDepart, Date dateDepart, Date dateArriveePrevue,
-                                                      String heureArriveePrevue, String typeVehicule) {
+            String heureArriveePrevue, String typeVehicule) {
 
         List<Conducteur> allConducteurs = conducteurRepository.findAll();
         List<Conducteur> conducteursDisponibles = new ArrayList<>();
 
+        String typePermisRequis = vehiculeFlotteRepository.findTypePermisRequisByTypeVehicule(typeVehicule);
+
         for (Conducteur conducteur : allConducteurs) {
-            boolean isAvailable = true;
-
-            // Check if the conducteur's permit type matches the required vehicle type
-            if (!conducteur.getTypePermis().equalsIgnoreCase(typeVehicule)) {
-                continue;
+            System.out.println(conducteur.getTypePermis() + " " + typePermisRequis + typeVehicule);
+            if (conducteur.getTypePermis().equalsIgnoreCase(typePermisRequis)) {
+                conducteursDisponibles.add(conducteur);
             }
-
-            List<VoyagePlanifie> voyagesConducteur = VoyagePlanifieRepository.findVoyagesByConducteurId(conducteur.getIdconducteur());
+        }
+        List<Conducteur> trulyAvailableDrivers = new ArrayList<>();
+        for (Conducteur conducteur : conducteursDisponibles) {
+            boolean isAvailable = true;
+            List<VoyagePlanifie> voyagesConducteur = voyagePlanifieService
+                    .getVoyagesConducteur(conducteur.getIdconducteur());
 
             for (VoyagePlanifie voyage : voyagesConducteur) {
-                // Check for overlapping voyages
-                boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart()) && dateDepart.before(voyage.getDateArriveePrevue());
-                boolean endsDuringTrip = dateArriveePrevue.after(voyage.getDateDepart()) && dateArriveePrevue.before(voyage.getDateArriveePrevue());
-                boolean spansTrip = dateDepart.before(voyage.getDateDepart()) && dateArriveePrevue.after(voyage.getDateArriveePrevue());
+                boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart())
+                        && dateDepart.before(voyage.getDateArriveePrevue());
+                boolean endsDuringTrip = dateArriveePrevue.after(voyage.getDateDepart())
+                        && dateArriveePrevue.before(voyage.getDateArriveePrevue());
+                boolean spansTrip = dateDepart.before(voyage.getDateDepart())
+                        && dateArriveePrevue.after(voyage.getDateArriveePrevue());
 
                 if (startsDuringTrip || endsDuringTrip || spansTrip) {
                     isAvailable = false;
@@ -101,12 +115,11 @@ public class ConducteurserviceImpl implements Conducteurservice {
             }
 
             if (isAvailable) {
-                conducteursDisponibles.add(conducteur);
+                trulyAvailableDrivers.add(conducteur);
             }
         }
 
-        return conducteursDisponibles;
+        return trulyAvailableDrivers;
     }
-
 
 }
