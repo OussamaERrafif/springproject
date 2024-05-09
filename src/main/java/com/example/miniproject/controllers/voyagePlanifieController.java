@@ -1,6 +1,7 @@
 
 package com.example.miniproject.controllers;
 
+import com.example.miniproject.dtos.VoyagePlanifieDTO;
 import com.example.miniproject.entities.VoyagePlanifie;
 import com.example.miniproject.services.VoyagePlanifieServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,26 @@ public class voyagePlanifieController {
     public List<VoyagePlanifie> getAllVoyages() {
         return voyagePlanifieService.getAllVoyages();
     }
+
+
     @PostMapping(produces = "application/json", consumes = "application/json")
-    public ResponseEntity<Object> addVoyage(@RequestBody VoyagePlanifie voyagePlanifie) {
+    public ResponseEntity<Object> addVoyage(@RequestBody VoyagePlanifieDTO voyagePlanifie) {
         VoyagePlanifie addedVoyage = voyagePlanifieService.add(voyagePlanifie);
         if (addedVoyage != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body("Voyage added successfully.");
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add voyage.");
+        }
+    }
+
+    //post mapping to add more than one voyage
+    @PostMapping(path="/addVoyages", produces = "application/json", consumes = "application/json")
+    public ResponseEntity<Object> addVoyages(@RequestBody List<VoyagePlanifieDTO> voyagePlanifieList) {
+        List<VoyagePlanifie> addedVoyages = voyagePlanifieService.addVoyages(voyagePlanifieList);
+        if (addedVoyages != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Voyages added successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add voyages.");
         }
     }
 

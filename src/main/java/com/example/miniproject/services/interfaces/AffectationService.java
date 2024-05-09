@@ -1,17 +1,12 @@
 package com.example.miniproject.services.interfaces;
 
-import com.example.miniproject.entities.Conducteur;
-import com.example.miniproject.entities.VehiculeFlotte;
-
-import java.util.Date;
-import java.util.List;
+import com.example.miniproject.entities.VoyagePlanifie;
 
 public interface AffectationService {
 
-    public void affecterConducteur(long idConducteur, Long idVoyagePlanifie, Long idVehiculeFlotte);
+    public int affecterConducteur(VoyagePlanifie voyage);
+    public int affecterVehicule(VoyagePlanifie voyage);
+    public int affecterConducteurEtVehicule(Long idcon ,Long idveh ,VoyagePlanifie voyage);
+    
 
-    public List<Conducteur> getConducteursDisponibles(String heureDepart, Date dateDepart, Date dateArriveePrevue,
-            String heureArriveePrevue , String typeVehicule);
-
-    List<VehiculeFlotte> getVehiculesDisponibles(String heureDepart, Date dateDepart, Date dateArriveePrevue, String heureArriveePrevue, String typeVehiculeRequis);
 }

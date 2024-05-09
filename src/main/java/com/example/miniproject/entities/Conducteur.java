@@ -32,4 +32,8 @@ public class Conducteur {
     private Date dateDelivrancePermis;
     private String typePermis;
 
+    public void addVoyagePlanifie(VoyagePlanifie voyage) {
+        this.VoyagePlanifie.add(voyage);
+    }
+
 }

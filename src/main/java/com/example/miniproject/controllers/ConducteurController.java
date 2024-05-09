@@ -2,6 +2,7 @@ package com.example.miniproject.controllers;
 
 import com.example.miniproject.dtos.ConducteurDTO;
 import com.example.miniproject.entities.Conducteur;
+import com.example.miniproject.services.ConducteurserviceImpl;
 import com.example.miniproject.services.interfaces.AffectationService;
 import com.example.miniproject.services.interfaces.Conducteurservice;
 
@@ -27,11 +28,11 @@ public class ConducteurController {
 
 
     @Autowired
-    Conducteurservice conducteurservice;
+    ConducteurserviceImpl conducteurservice;
 
 
     @Autowired
-      AffectationService affectationService;
+    AffectationService affectationService;
 
     @GetMapping(produces = "application/json")
     public List<Conducteur> getAllConducteurs() {
@@ -46,7 +47,15 @@ public class ConducteurController {
     @PutMapping(path = "/add", produces = "application/json")
     public ResponseEntity<String> addConducteur(@RequestBody ConducteurDTO conducteurDTO) {
         conducteurservice.addConducteur(conducteurDTO);
+        
 
+        return ResponseEntity.status(HttpStatus.OK).body("Conducteur added successfully!");
+
+    }
+
+    @PutMapping(path = "/addB", produces = "application/json")
+    public ResponseEntity<String> addConducteur(@RequestBody List<ConducteurDTO> conducteurDTO) {
+        conducteurservice.addConducteur(conducteurDTO);
         return ResponseEntity.status(HttpStatus.OK).body("Conducteur added successfully!");
 
     }
@@ -65,13 +74,12 @@ public class ConducteurController {
 
     }
 
-    @PostMapping(value = "/affecter", produces = "application/json")
-    public ResponseEntity<String> affecterConducteur(@PathVariable Long idVoyagePlanifie,
-            @PathVariable Long idConducteur,
-            @PathVariable Long idVehiculeFlotte) {
-        affectationService.affecterConducteur(idConducteur, idVoyagePlanifie, idVehiculeFlotte);
-        return ResponseEntity.status(HttpStatus.OK).body("Conducteur affected successfully!");
+    //@PostMapping(value = "/affecter", produces = "application/json")
+    //public ResponseEntity<String> affecterConducteur(@PathVariable Long idVoyagePlanifie,
+            //@PathVariable Long idConducteur,
+            ////affectationService.affecterConducteur(idConducteur, idVoyagePlanifie, idVehiculeFlotte);
+       // return ResponseEntity.status(HttpStatus.OK).body("Conducteur affected successfully!");
 
-    }
+    //}
 
 }

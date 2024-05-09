@@ -1,13 +1,21 @@
 package com.example.miniproject.services;
 
 import com.example.miniproject.entities.VehiculeFlotte;
+import com.example.miniproject.entities.VoyagePlanifie;
 import com.example.miniproject.repositories.VehiculeFlotteRepository;
+
 import com.example.miniproject.services.interfaces.VehiculeFlotteService;
+import com.example.miniproject.utils.VehiculeMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.miniproject.dtos.VehiculeDTO;
+
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -16,10 +24,22 @@ public class VehiculeFlotteServiceImpl implements VehiculeFlotteService {
     @Autowired
     private VehiculeFlotteRepository vehiculeFlotteRepository;
 
+    @Autowired
+    private VoyagePlanifieServiceImpl VoyagePlanifieService;
+
     @Override
-    @Transactional
-    public VehiculeFlotte saveVehiculeFlotte(VehiculeFlotte vehiculeFlotte) {
-        return vehiculeFlotteRepository.save(vehiculeFlotte);
+    public VehiculeFlotte saveVehiculeFlotte(VehiculeDTO vehiculeFlotteDto) {
+        VehiculeFlotte VehiculeFlotte = VehiculeMapper.dtoToEntity(vehiculeFlotteDto);
+        return vehiculeFlotteRepository.save(VehiculeFlotte);
+    }
+
+    @Override
+    public List<VehiculeFlotte> saveAllVehiculeFlotte(List<VehiculeDTO> vehiculesFlotte) {
+        List<VehiculeFlotte> vehicules = new ArrayList<>();
+        for (VehiculeDTO vehiculeFlotte : vehiculesFlotte) {
+            vehicules.add(VehiculeMapper.dtoToEntity(vehiculeFlotte));
+        }
+        return vehiculeFlotteRepository.saveAll(vehicules);
     }
 
     @Override
@@ -58,4 +78,48 @@ public class VehiculeFlotteServiceImpl implements VehiculeFlotteService {
             vehiculeFlotteRepository.save(existingVehiculeFlotte);
         }
     }
+
+    public List<VehiculeFlotte> getVehiculesDisponibles(String heureDepart, Date dateDepart, Date dateArriveePrevue,
+            String heureArriveePrevue, String typeVehiculeRequis) {
+        List<VehiculeFlotte> allVehicules = vehiculeFlotteRepository.findAll();
+        List<VehiculeFlotte> vehiculesDisponibles = new ArrayList<>();
+
+        // First, collect all vehicles that match the required type
+        for (VehiculeFlotte vehicule : allVehicules) {
+            if (vehicule.getTypeVehicule().equalsIgnoreCase(typeVehiculeRequis)) {
+                vehiculesDisponibles.add(vehicule);
+            }
+        }
+
+        // Create a new list to store truly available vehicles
+        List<VehiculeFlotte> trulyAvailableVehicles = new ArrayList<>();
+
+        // Then check if the vehicles are available
+        for (VehiculeFlotte vehicule : vehiculesDisponibles) {
+            boolean isAvailable = true;
+            List<VoyagePlanifie> voyagesVehicule = VoyagePlanifieService
+                    .getVoyagesVehicule(vehicule.getIdVehiculeFlotte());
+
+            for (VoyagePlanifie voyage : voyagesVehicule) {
+                boolean startsDuringTrip = dateDepart.after(voyage.getDateDepart())
+                        && dateDepart.before(voyage.getDateArriveePrevue());
+                boolean endsDuringTrip = dateArriveePrevue.after(voyage.getDateDepart())
+                        && dateArriveePrevue.before(voyage.getDateArriveePrevue());
+                boolean spansTrip = dateDepart.before(voyage.getDateDepart())
+                        && dateArriveePrevue.after(voyage.getDateArriveePrevue());
+
+                if (startsDuringTrip || endsDuringTrip || spansTrip) {
+                    isAvailable = false;
+                    break;
+                }
+            }
+
+            if (isAvailable) {
+                trulyAvailableVehicles.add(vehicule);
+            }
+        }
+
+        return trulyAvailableVehicles;
+    }
+
 }
