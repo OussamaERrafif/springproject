@@ -26,6 +26,9 @@ public class VehiculeFlotte {
     @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
     private List<VoyagePlanifie> voyages;
 
+    @OneToMany(mappedBy = "vehicule", cascade = CascadeType.ALL)
+    private List<BonConsommation> bonConsommations;
+
     private String identifiantUnique;
     private String marque;
     private String modele;

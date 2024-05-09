@@ -20,7 +20,6 @@ public class DocumentVehicule {
     private Long id;
 
     @ManyToOne
-    @JoinColumn
     private VehiculeFlotte vehicule;
 
     @Column
